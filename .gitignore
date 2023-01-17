@@ -15,4 +15,3 @@
 !.vscode/extensions.json
 
 server/node_modules
-postgres/*
