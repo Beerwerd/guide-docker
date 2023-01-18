@@ -55,6 +55,34 @@ services:
       exit 0;
       "
 
+  mysql:
+    container_name: ${MYSQL_HOST}
+    image: mysql:8
+    restart: always
+    command: --authentication_policy=mysql_native_password --collation-server=utf8mb4_0900_ai_ci
+    cap_add:
+      - SYS_NICE
+    env_file:
+      - .env
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    ports:
+      - ${MYSQL_PORT}:3306
+    networks:
+      - webnet
+
+  redis:
+    container_name: ${REDIS_HOST}
+    image: "redis:7-alpine"
+    ports:
+      - ${REDIS_PORT}:6379
+    networks:
+      - webnet
+
+
 networks:
   webnet:
     driver: bridge
